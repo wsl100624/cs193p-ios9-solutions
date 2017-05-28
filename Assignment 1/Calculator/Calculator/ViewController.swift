@@ -10,16 +10,16 @@ import UIKit
 
 class ViewController: UIViewController
 {
-    @IBOutlet private weak var display: UILabel!
+    @IBOutlet fileprivate weak var display: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
-    private var userIsInTheMiddleOfTyping = false
+    fileprivate var userIsInTheMiddleOfTyping = false
     
-    @IBAction private func touchDigit(sender: UIButton) {
+    @IBAction fileprivate func touchDigit(_ sender: UIButton) {
         let digit = sender.currentTitle!
         if userIsInTheMiddleOfTyping {
             let textCurrentlyInDisplay = display.text!
-            if digit != "." || textCurrentlyInDisplay.rangeOfString(".") == nil {
+            if digit != "." || textCurrentlyInDisplay.range(of: ".") == nil {
                 display.text = textCurrentlyInDisplay + digit
             }
         } else {
@@ -32,13 +32,13 @@ class ViewController: UIViewController
         }
     }
     
-    @IBAction func clear(sender: UIButton) {
+    @IBAction func clear(_ sender: UIButton) {
         brain.clear()
         displayValue = 0
         userIsInTheMiddleOfTyping = false
     }
     
-    @IBAction func backspace(sender: UIButton) {
+    @IBAction func backspace(_ sender: UIButton) {
         guard userIsInTheMiddleOfTyping == true else {
             return
         }
@@ -47,7 +47,7 @@ class ViewController: UIViewController
             return
         }
         
-        number.removeAtIndex(number.endIndex.predecessor())
+        number.remove(at: number.characters.index(before: number.endIndex))
         if number.isEmpty {
             number = "0"
             userIsInTheMiddleOfTyping = false
@@ -55,19 +55,19 @@ class ViewController: UIViewController
         display.text = number
     }
     
-    private var displayValue: Double? {
+    fileprivate var displayValue: Double? {
         get {
-            if let text = display.text, value = NSNumberFormatter().numberFromString(text)?.doubleValue {
+            if let text = display.text, let value = NumberFormatter().number(from: text)?.doubleValue {
                 return value
             }
             return nil
         }
         set {
             if let value = newValue {
-                let formatter = NSNumberFormatter()
-                formatter.numberStyle = .DecimalStyle
+                let formatter = NumberFormatter()
+                formatter.numberStyle = .decimal
                 formatter.maximumFractionDigits = Constants.numberOfDigitsAfterDecimalPoint
-                display.text = formatter.stringFromNumber(value)
+                //display.text = formatter.string(from: NSNumber(value))
                 descriptionLabel.text = brain.getDescription()
             } else {
                 display.text = "0"
@@ -78,9 +78,9 @@ class ViewController: UIViewController
         }
     }
 
-    private var brain = CalculatorBrain()
+    fileprivate var brain = CalculatorBrain()
     
-    @IBAction private func performOperation(sender: UIButton) {
+    @IBAction fileprivate func performOperation(_ sender: UIButton) {
         if userIsInTheMiddleOfTyping {
             brain.setOperand(displayValue!)
             userIsInTheMiddleOfTyping = false
