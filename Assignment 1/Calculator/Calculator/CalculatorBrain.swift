@@ -84,12 +84,15 @@ class CalculatorBrain {
             case .constant(let value):
                 resultAccumulator = value
                 descriptionAccumulator = symbol
+            
             case .nullaryOperation(let function, let descriptionValue):
                 resultAccumulator = function()
                 descriptionAccumulator = descriptionValue
+            
             case .unaryOperation(let resultFunction, let descriptionFunction):
                 resultAccumulator = resultFunction(resultAccumulator)
                 descriptionAccumulator = descriptionFunction(descriptionAccumulator)
+           
             case .binaryOperation(let resultFunction, let descriptionFunction, let precedence):
                 executePendingBinaryOperation()
                 if currentPrecedence.rawValue < precedence.rawValue {
